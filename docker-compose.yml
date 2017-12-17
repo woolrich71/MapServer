@@ -1,0 +1,20 @@
+maptest:
+  image: woolrich71/maptest:latest
+  links:
+    - mapmongo
+  ports:
+    - "8080:8080"
+
+
+
+mapmongo:
+  image: mongo:latest
+  ports:
+    - "27017:27017"
+  volumes_from:
+    - mapdata
+
+mapdata:
+  image: debian:wheezy
+  volumes:
+    - /data/db

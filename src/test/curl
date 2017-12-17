@@ -1,0 +1,11 @@
+
+# message for login (ormebäcksgatan)
+curl -v  -H "Content-Type: application/json" -X POST  -d  '{"uuid":"1234-5444-1234", "destination":{"lat":57.714332,"lng":12.060843}}' http://192.168.0.11:8080/login
+
+ping (ormebäcksgatan
+curl -v  -H "Content-Type: application/json" -X POST  -d '{"uuid": "1234-5444-1234",  "position":{"lat":57.714332,"lng":12.060843}}' http://192.168.0.11:8080/ping
+
+
+ping (ormebäcksgatan
+curl -v  -H "Content-Type: application/json" -X POST  -d '{"uuid": "1234-5444-1234",  "position":{"lat":57.706858,"lng":11.96244}}' http://192.168.0.11:8080/ping
+
