@@ -110,7 +110,6 @@ public class OAuth {
     public <T> T get(String path, Map<String, String> parameters, Class<T> valueType )  throws Exception {
 
         HttpResponse response = getHttpResponse(path, parameters);
-
         int statusCode = response.getStatusLine().getStatusCode();
         switch(statusCode) {
             case HTTP_UNAUTHORIZED:
@@ -122,10 +121,10 @@ public class OAuth {
                 //response = getHttpResponse(path, parameters);
                 break;
             default:
+                String content = EntityUtils.toString(response.getEntity());
+                System.out.println(content);
                 System.out.println("getStatusCode:"+statusCode);
                 return null;
-
-
         }
 
         return  getObject(response, valueType, true);
@@ -150,14 +149,8 @@ public class OAuth {
                 .setParameter("format", "json");
         parameters.entrySet().stream().forEach(e -> builder.setParameter(e.getKey(), e.getValue()));
         URI uri = builder.build();
-        HttpGet httpget = new HttpGet(uri);
-   //     System.out.println(httpget.getURI());
-
-
         HttpGet getRequest = new HttpGet(uri);   // the http GET request
         getRequest.addHeader(AUTHORIZATION, BEARER +" "+ accessToken);
-
-
         return httpClient.execute(getRequest);
     }
 

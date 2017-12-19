@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import se.woolrich.demo.entities.*;
+import se.woolrich.demo.model.Livemap;
 import se.woolrich.demo.model.LocationList;
 import se.woolrich.demo.model.Trip;
 import se.woolrich.demo.model.TripList;
@@ -81,6 +83,68 @@ public class RestController {
     }
 
 
+    @RequestMapping("/livemap")
+    public ResponseEntity<?> home() {
+
+        Position position = new Position();
+        position.setLat(57.707145f);
+        position.setLng(11.967824f);
+        getLocation(position);
+        Optional<Livemap> livemap = getLivemap(position);
+        return new ResponseEntity(livemap.orElse(null), new HttpHeaders(), HttpStatus.OK);
+    }
+
+    class BoundingBox {
+
+        float width = 0.001f;
+        private final Position position;
+
+        public BoundingBox(Position position) {
+            this.position = position;
+        }
+
+        String getMaxx() {
+            return get(position.getLng(), width);
+        }
+        String getMinx() {
+            return get(position.getLng(), -width);
+        }
+        String getMaxy() {
+            return get(position.getLat(), width);
+
+        }
+        String getMiny() {
+            return get(position.getLat(), -width);
+        }
+
+        String get(float xy, float w){
+            float v = (xy + w) * 1000000f;
+            return Integer.toString((int)v);
+        }
+
+
+    }
+
+    private Optional<Livemap> getLivemap(Position position) {
+
+        BoundingBox bb = new BoundingBox(position);
+
+        Map<String, String> parameters = Map.of(
+                "maxx", bb.getMaxx(),
+                "minx", bb.getMinx(),
+                "maxy", bb.getMaxy(),
+                "miny", bb.getMiny(),
+                "onlyRealtime", "yes");
+
+        Livemap value = null;
+        try {
+            value = oauth.get("/livemap", parameters, Livemap.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Optional.of(value);
+    }
 
      Result getTime(User user, Ping ping) {
 
@@ -140,6 +204,11 @@ public class RestController {
 
         return Optional.of(value);
     }
+
+
+
+
+
 
 
     // curl -v  -H "Content-Type: application/json" -X POST  -d '{"lat":57.714332,"lng":12.060843}' http://192.168.0.11:8080/getNearbyAddress
