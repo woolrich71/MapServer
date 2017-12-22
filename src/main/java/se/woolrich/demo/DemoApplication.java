@@ -1,16 +1,21 @@
 package se.woolrich.demo;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.*;
 import se.woolrich.demo.entities.Position;
 import se.woolrich.demo.model.LocationList;
@@ -40,41 +45,20 @@ public class DemoApplication implements CommandLineRunner {
 	@Autowired
 	OAuth oauth;
 
+	@Bean
+	@Primary
+	public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
+		ObjectMapper objectMapper = builder.createXmlMapper(false).build();
+		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+		return objectMapper;
+	}
+
 
 
 	@RequestMapping("/")
 	String home() {
 		return "Hello World!";
-	}
-
-	@RequestMapping(value = "/positions/get", method = RequestMethod.GET)
-	public List<Position> getAllPositions() {
-		return repository.findAll();
-	}
-
-
-	// curl -v  -H "Content-Type: application/json" -X POST  -d '{"lat":57.714802,"lng":12.055113}' http://localhost:8080/post
-	@PostMapping(value = "/post" )
-	@ResponseBody
-	public ResponseEntity<?> addPosition(@RequestBody Position position) {
-	//	repository.save(position);
-		String path = "/location.nearbyaddress";
-
-		Map<String, String> parameters = Map.of(
-				"originCoordLat", Float.toString(position.getLat()),
-				"originCoordLong", Float.toString(position.getLng()));
-
-		try {
-			LocationList locationList = oauth.get(path, parameters, LocationList.class);
-			if(locationList != null)
-				return new ResponseEntity(locationList.getCoordLocation(), new HttpHeaders(), HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return new ResponseEntity("Successfully added position", new HttpHeaders(), HttpStatus.OK);
-
-
 	}
 
 
@@ -98,9 +82,5 @@ public class DemoApplication implements CommandLineRunner {
         System.out.println("Current IP address : " + localHost.getHostAddress());
 
     }
-
-
-
-
 
 }

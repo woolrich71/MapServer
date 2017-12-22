@@ -2,6 +2,7 @@ package se.woolrich.demo.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.data.annotation.Id;
+import se.woolrich.demo.model.Vehicle;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -17,6 +18,7 @@ public class Result {
     LocalTime start;
     LocalTime stop;
     List<Section> sections;
+    List<Vehicle> vehicles;
     Duration duration;
 
     public String getId() {
@@ -32,7 +34,7 @@ public class Result {
     }
 
     public List<Section> getSections() {
-        return sections;
+        return sections == null ? List.of(): sections;
     }
 
     public void setSections(List<Section> sections) {
@@ -61,5 +63,13 @@ public class Result {
 
     public Duration getDuration() {
         return duration;
+    }
+
+    public List<Vehicle> getVehicles() {
+        return vehicles == null ? List.of(): vehicles;
+    }
+
+    public void setVehicles(List<Vehicle> vehicles) {
+        this.vehicles = vehicles;
     }
 }

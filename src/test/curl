@@ -1,6 +1,6 @@
 
 # message for login (ormebäcksgatan)
-curl -v  -H "Content-Type: application/json" -X POST  -d  '{"uuid":"1234-5444-1234", "destination":{"lat":57.714332,"lng":12.060843}}' http://192.168.0.11:8080/login
+curl -v  -H "Content-Type: application/json" -X POST  -d  '{"uuid":"1234-5444-1234", "destination":{"lat":57.714332,"lng":12.060843}}' http://18.196.13.25:8080/login
 
 ping (ormebäcksgatan
 curl -v  -H "Content-Type: application/json" -X POST  -d '{"uuid": "1234-5444-1234",  "position":{"lat":57.714332,"lng":12.060843}}' http://192.168.0.11:8080/ping
@@ -9,3 +9,16 @@ curl -v  -H "Content-Type: application/json" -X POST  -d '{"uuid": "1234-5444-12
 ping (ormebäcksgatan
 curl -v  -H "Content-Type: application/json" -X POST  -d '{"uuid": "1234-5444-1234",  "position":{"lat":57.706858,"lng":11.96244}}' http://192.168.0.11:8080/ping
 
+redbergsplatsen
+curl -v  -H "Content-Type: application/json" -X POST  -d '{"uuid": "1234-5444-1234",  "position":{"lat":57.716303,"lng":12.004881}}' http://192.168.0.11:8080/ping
+
+curl -v  -H "Content-Type: application/json" -X POST  -d '{"uuid": "1234-5444-1234",  "position":{"lat":57.716303,"lng":12.004881}}' http://192.168.0.11:8080/livemap
+
+
+register with OAuth
+curl -vu aClient:aSecret -X POST 'http://localhost:8080/oauth/token?username=test@test.de&amp;password=aPassword&amp;grant_type=password'
+
+
+
+aws
+18.196.13.25
